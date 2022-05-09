@@ -1,25 +1,29 @@
-import React, {useEffect,useState} from "react";
+import React, {useEffect} from "react";
 import Header from "./../components/Header";
 import Rating from "../components/homeComponents/Rating";
 import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
-import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { listProductDetails } from "../Redux/Actions/ProductAction";
+import { useSelector } from 'react-redux';
+import Loading from './../components/LoadingError/Loading';
 
 
 const SingleProduct = ({ match }) => {
-
-  const [product,setProduct] = useState([]);
+  const dispatch = useDispatch();
+  const productID = match.params.id;
+  const productDetails = useSelector((state) => state.productDetails)
+  const  {loading,error,product} =productDetails
   useEffect(()=>{
-    const fetchproduct = async () =>{
-      const {data} = await axios.get(`/api/products/${match.params.id}`);
-      setProduct(data);
-    };
-    fetchproduct();
-  },[match]);
+   dispatch(listProductDetails(productID))
+  },[dispatch, productID]);
   return (
     <>
       <Header />
       <div className="container single-product">
+        { loading ? (<Loading></Loading>)
+        :error ? (<Message variant="alert-danger">{error}</Message>)
+        : <>
         <div className="row">
           <div className="col-md-6">
             <div className="single-image">
@@ -130,6 +134,9 @@ const SingleProduct = ({ match }) => {
             </div>
           </div>
         </div>
+        </>
+        }
+        
       </div>
     </>
   );

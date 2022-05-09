@@ -4,6 +4,8 @@ import Rating from "./Rating";
 import Pagination from "./pagination";
 import { useDispatch,useSelector } from "react-redux";
 import { listProduct } from '../../Redux/Actions/ProductAction';
+import Loading from './../LoadingError/Loading';
+import Message from './../LoadingError/Error';
 
 const ShopSection = () => {
     const dispatch = useDispatch();
@@ -20,10 +22,15 @@ const ShopSection = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                {loading ? (<p>Loading...</p>): error ? 
-                           (<p>Error: {error}</p>) : 
+                {loading ? (
+                  <div class="mb-5">
+                    <Loading></Loading>
+                  </div>
+
+                ): error ?
+                           (<Message variant={"alert-danger"}>{error}</Message>) : 
                            (<>
-                    {products.map((product) => (
+                  {products.map((product) => (
                   <div
                     className="shop col-lg-4 col-md-6 col-sm-6"
                     key={product._id}
